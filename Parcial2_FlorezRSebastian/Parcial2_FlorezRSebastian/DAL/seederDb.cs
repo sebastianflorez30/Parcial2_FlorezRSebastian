@@ -27,7 +27,7 @@ namespace Parcial2_FlorezRSebastian.DAL
         {
             if (!_context.Tickets.Any())//any halla al menos 1 registro, ! no halla al menos 1 registro
             {
-                for (int i = 0; i < 50; i++)
+                for (int i = 0; i < 50000; i++)
                 {
                     _context.Tickets.Add(new Ticket  { });
                 }
