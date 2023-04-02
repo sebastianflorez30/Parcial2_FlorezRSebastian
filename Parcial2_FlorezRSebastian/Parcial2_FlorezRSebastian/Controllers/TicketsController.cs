@@ -13,41 +13,64 @@ namespace Parcial2_FlorezRSebastian.Controllers
 {
     public class TicketsController : Controller
     {
-        #region Constructor
         private readonly DatabaseContext _context;
+
+
 
         public TicketsController(DatabaseContext context)
         {
             _context = context;
         }
-        #endregion
 
-        #region Private Methods
-        private async Task<Ticket> GetTicketById(Guid? Id)
-        {
-           
-            return await _context.Tickets.FirstOrDefaultAsync(t => t.Id == Id);              
-              
-        }
 
-        #endregion
 
-        #region Ticket Actions
+        // GET: Tickets
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Tickets
-                
-                .ToListAsync());
+            return _context.Tickets != null ?
+            View(await _context.Tickets.ToListAsync()) :
+            Problem("Entity set 'DatabaseContext.Tickets'  is null.");
         }
 
-        public IActionResult Create() //actionresult retornar cualquier tipo de cosa
+
+
+        // GET: Tickets/Details/5
+        public async Task<IActionResult> Details(Guid? id)
         {
-            return View(); //retorna lo que se desee en view es una vista, en file un tipo de archivo
+            if (id == null || _context.Tickets == null)
+            {
+                return NotFound();
+            }
+
+
+
+            var ticket = await _context.Tickets
+            .FirstOrDefaultAsync(m => m.Id == id);
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+
+
+            return View(ticket);
         }
+
+
+
+        // GET: Tickets/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Ticket ticket)//task es una tarea que realiza una promesa; <tipo devuelve>
+        public async Task<IActionResult> Create(Ticket ticket)
         {
             if (ModelState.IsValid)
             {
@@ -55,36 +78,41 @@ namespace Parcial2_FlorezRSebastian.Controllers
                 {
                     ticket.UsedDate = DateTime.Now;
                     _context.Add(ticket);
-                    await _context.SaveChangesAsync(); //savechangeasync es para hacer en base de datos el insert into, await permite continuar en segundo plano
-                    return RedirectToAction(nameof(Index)); //devuelve despues de realizar accion devuekver a la pestaña especifica de index
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateException dbUpdateException)
-                {
+                catch (DbUpdateException dbUpdateException)//tradicional, captura mensaje
+                {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe un ticket con el mismo numero.");
+                        ModelState.AddModelError(string.Empty, "Ya existe un tiquete con el mismo codigo.");
                     }
                     else
                     {
                         ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
                     }
                 }
-                catch (Exception exception)
-                {
+                catch (Exception exception) //especifico relacionado a BD
+                {
                     ModelState.AddModelError(string.Empty, exception.Message);
                 }
             }
             return View(ticket);
         }
 
-        public async Task<IActionResult> Edit(Guid? Id)
+
+
+        // GET: Tickets/Edit/5
+        public async Task<IActionResult> Edit(Guid? id)
         {
-            if (Id == null || _context.Tickets == null)
+            if (id == null || _context.Tickets == null)
             {
                 return NotFound();
             }
 
-            var ticket= await GetTicketById(Id);
+
+
+            var ticket = await _context.Tickets.FindAsync(id);
             if (ticket == null)
             {
                 return NotFound();
@@ -92,14 +120,18 @@ namespace Parcial2_FlorezRSebastian.Controllers
             return View(ticket);
         }
 
-        [HttpPost] //hacer una insercion en base de datos
+
+
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, Ticket ticket) //task es una tarea que realiza una promesa; <tipo devuelve>
+        public async Task<IActionResult> Edit(Guid id, Ticket ticket)
         {
             if (id != ticket.Id)
             {
                 return NotFound();
             }
+
+
 
             if (ModelState.IsValid)
             {
@@ -107,14 +139,14 @@ namespace Parcial2_FlorezRSebastian.Controllers
                 {
                     ticket.UsedDate = DateTime.Now;
                     _context.Update(ticket);
-                    await _context.SaveChangesAsync(); //asyncronica es algo se ejecuta en segundo plano, sync es esperar a terminar esa accion. para consultas en base datos usa async await
+                    await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateException dbUpdateException)
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe un tiquete con el mismo numero.");
+                        ModelState.AddModelError(string.Empty, "Ya existe un tiquete con el mismo codigo de tiquete.");
                     }
                     else
                     {
@@ -129,49 +161,42 @@ namespace Parcial2_FlorezRSebastian.Controllers
             return View(ticket);
         }
 
-        public async Task<IActionResult> Details(Guid? Id)
+
+
+        // GET: Tickets/Delete/5
+        public async Task<IActionResult> Delete(Guid? id)
         {
-            if (Id == null || _context.Tickets == null) return NotFound();
-
-            var ticket = await _context.Tickets
-          
-                .FirstOrDefaultAsync(t => t.Id ==  Id);
-
-            if (ticket == null) return NotFound();
-
-            return View(ticket);
-        }
-
-        public async Task<IActionResult> Delete(Guid? Id)
-        {
-            if (Id == null || _context.Tickets == null)
+            if (id == null || _context.Tickets == null)
             {
                 return NotFound();
             }
 
-            Ticket ticket = await _context.Tickets
-               
-                .FirstOrDefaultAsync(t => t.Id == Id);
+
+
+            var ticket = await _context.Tickets
+            .FirstOrDefaultAsync(m => m.Id == id);
             if (ticket == null)
             {
                 return NotFound();
             }
 
+
+
             return View(ticket);
         }
 
+
+
+        // POST: Tickets/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             if (_context.Tickets == null)
             {
-                return Problem("Entity set 'DatabaseContext.Countries' is null.");
+                return Problem("Entity set 'DatabaseContext.Tickets'  is null.");
             }
-            var ticket = await _context.Tickets
-               
-                .FirstOrDefaultAsync(t => t.Id == id);
-
+            var ticket = await _context.Tickets.FindAsync(id);
             if (ticket != null)
             {
                 _context.Tickets.Remove(ticket);
@@ -180,7 +205,12 @@ namespace Parcial2_FlorezRSebastian.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-#endregion
-        
+
+
+
+        private bool TicketExists(Guid id)
+        {
+            return (_context.Tickets?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
     }
 }
