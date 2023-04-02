@@ -15,7 +15,7 @@ namespace Parcial2_FlorezRSebastian.DAL.Entities
         public DateTime? UsedDate { get; set; } //? quiere decir estos campos pueden ser nullos
 
         [Display(Name = "Boleta usada")]
-        public Boolean? IsUsed { get; set; } = false;
+        public Boolean IsUsed { get; set; } = false;
 
         [Display(Name = "Porteria entrada")]               
         public String? EntranceGate { get; set; }
