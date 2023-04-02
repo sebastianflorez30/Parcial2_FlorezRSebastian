@@ -13,7 +13,21 @@ builder.Services.AddDbContext<DatabaseContext>(o =>//crear conexion base dato
 
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation(); //actualiza en caliente los cambios HTML 
 
+builder.Services.AddTransient<seederDb>();//llenado maximo de datos, incertar dependencias
+
 var app = builder.Build();
+
+SeederData();
+void SeederData()
+{
+    IServiceScopeFactory? scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+
+    using (IServiceScope? scope = scopedFactory.CreateScope())
+    {
+        seederDb? service = scope.ServiceProvider.GetService<seederDb>();
+        service.SeederAsync().Wait();
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

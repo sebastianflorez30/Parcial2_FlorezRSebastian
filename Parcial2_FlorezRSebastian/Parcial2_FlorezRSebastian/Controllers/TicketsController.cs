@@ -11,6 +11,8 @@ using Parcial2_FlorezRSebastian.DAL.Entities;
 
 namespace Parcial2_FlorezRSebastian.Controllers
 {
+
+    #region Constructor
     public class TicketsController : Controller
     {
         private readonly DatabaseContext _context;
@@ -22,7 +24,7 @@ namespace Parcial2_FlorezRSebastian.Controllers
             _context = context;
         }
 
-
+        #endregion
 
         // GET: Tickets
         public async Task<IActionResult> Index()
