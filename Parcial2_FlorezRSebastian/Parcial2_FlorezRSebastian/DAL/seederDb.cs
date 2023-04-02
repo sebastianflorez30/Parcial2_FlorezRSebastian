@@ -20,6 +20,7 @@ namespace Parcial2_FlorezRSebastian.DAL
         {
             await _context.Database.EnsureCreatedAsync(); // me reemplaza el comando update-database
             await PopulateTicketsAsync();
+            await _context.SaveChangesAsync();   
         }
 
         private async Task PopulateTicketsAsync()
