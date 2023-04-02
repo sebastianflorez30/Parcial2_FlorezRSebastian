@@ -13,7 +13,7 @@ builder.Services.AddDbContext<DatabaseContext>(o =>//crear conexion base dato
 
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation(); //actualiza en caliente los cambios HTML 
 
-builder.Services.AddTransient<seederDb>();//llenado maximo de datos, incertar dependencias
+builder.Services.AddTransient<SeederDb>();//llenado maximo de datos, incertar dependencias
 
 var app = builder.Build();
 
@@ -24,7 +24,7 @@ void SeederData()
 
     using (IServiceScope? scope = scopedFactory.CreateScope())
     {
-        seederDb? service = scope.ServiceProvider.GetService<seederDb>();
+        SeederDb? service = scope.ServiceProvider.GetService<SeederDb>();
         service.SeederAsync().Wait();
     }
 }

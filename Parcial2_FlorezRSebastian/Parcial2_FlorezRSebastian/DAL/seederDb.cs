@@ -4,14 +4,14 @@ using System.Diagnostics.Metrics;
 
 namespace Parcial2_FlorezRSebastian.DAL
 {
-    public class seederDb
+    public class SeederDb
     {
 
 
         private readonly DatabaseContext _context;
 
 
-        public seederDb(DatabaseContext context)
+        public SeederDb(DatabaseContext context)
         {
             _context = context;
         }
