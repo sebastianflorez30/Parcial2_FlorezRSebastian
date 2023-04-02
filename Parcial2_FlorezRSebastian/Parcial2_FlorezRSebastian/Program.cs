@@ -11,6 +11,8 @@ builder.Services.AddDbContext<DatabaseContext>(o =>//crear conexion base dato
     o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation(); //actualiza en caliente los cambios HTML 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
