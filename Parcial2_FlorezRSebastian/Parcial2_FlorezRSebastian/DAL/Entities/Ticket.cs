@@ -5,10 +5,9 @@ namespace Parcial2_FlorezRSebastian.DAL.Entities
 {
     public class Ticket : Entity
     {
-        [Display(Name = "Codigo boleta")]
-        [RegularExpression("(^[0-9]+$)", ErrorMessage = "Solo se permiten números")]//no se aceptan caracteres
+        [Display(Name = "Codigo boleta")]        
         [Range(0, short.MaxValue, ErrorMessage = "Debe ingresar un valor numérico.")]//solo recibe valores numericos
-        [MaxLength(10, ErrorMessage = "El campo {0} debe ser de {1} caracteres.")] //Establece el tamaño que debe tener
+        [RegularExpression("^.{0,5}$", ErrorMessage = "El campo {0} debe tener una longitud máxima de {1} caracteres.")] //Establece el tamaño que debe tener
         [Required(ErrorMessage = "El campo {0} es oblilgatorio.")] //errormessage permite enviar un mensaje de error
         public int CodTicket { get; set; }
 
