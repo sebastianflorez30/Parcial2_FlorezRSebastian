@@ -29,10 +29,9 @@ namespace Parcial2_FlorezRSebastian.DAL
             {
                 for (int i = 1; i < 50000; i++)
                 {
-                    _context.Tickets.Add(new Ticket  { });
+                    _context.Tickets.Add(new Ticket { CodTicket=i });
                     i++;
-                }
-
+                }                
             }
         }
 
